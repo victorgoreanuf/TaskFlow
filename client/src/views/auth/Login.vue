@@ -136,7 +136,11 @@
               </b-button>
             </b-form>
           </validation-observer>
+          <div class="mt-2 flex font-small-3 justify-content-center w-100 text-center ">
+            <p>Not a member? <b><a :href="link">Sign up</a></b></p>
+          </div>
         </b-col>
+
       </b-col>
       <!-- /Login-->
     </b-row>
@@ -155,6 +159,7 @@ export default {
   mixins: [togglePasswordVisibility],
   data() {
     return {
+      link: window.location.origin + "/register",
       form: {
         remember: 0,
         password: null,

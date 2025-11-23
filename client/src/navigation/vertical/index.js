@@ -1,6 +1,6 @@
 export default [
 	{
-		title: 'Home',
+		title: 'My Projects',
 		route: 'home',
 		icon: 'HomeIcon',
 	},

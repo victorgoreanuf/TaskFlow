@@ -12,6 +12,16 @@ export default [
 			title: 'Login'
 		},
 	},
+    {
+        path: '/register',
+        name: 'register',
+        component: () => import('@/views/auth/Register.vue'),
+        meta: {
+            layout: 'full',
+            middleware: [ensureCsrfTokenSet, guest],
+            title: 'Register'
+        },
+    },
 	{
 		path: '/forget-password',
 		name: 'forget_password',

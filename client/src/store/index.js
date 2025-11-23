@@ -7,6 +7,7 @@ import appConfig from './app-config'
 import verticalMenu from './vertical-menu'
 import auth from './auth.store'
 import breadcrumbs from './breadcrumbs.store'
+import project from "@/store/project";
 
 Vue.use(Vuex)
 
@@ -17,6 +18,7 @@ export default new Vuex.Store({
 		verticalMenu,
 		auth,
 		breadcrumbs,
+        project,
 	},
 	strict: process.env.NODE_ENV !== 'production'
 })

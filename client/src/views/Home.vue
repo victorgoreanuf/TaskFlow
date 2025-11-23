@@ -1,30 +1,54 @@
 <template>
-  <div>
-    <b-card title="Kick start your project 🚀">
-      <b-card-text>All the best for your new project.</b-card-text>
-      <b-card-text>Please make sure to read our <b-link
-        href="https://pixinvent.com/demo/vuexy-vuejs-admin-dashboard-template/documentation/"
-        target="_blank"
-      >
-        Template Documentation
-      </b-link> to understand where to go from here and how to use our template.</b-card-text>
-    </b-card>
-
-    <b-card title="Want to integrate JWT? 🔒">
-      <b-card-text>We carefully crafted JWT flow so you can implement JWT with ease and with minimum efforts.</b-card-text>
-      <b-card-text>Please read our  JWT Documentation to get more out of JWT authentication.</b-card-text>
-    </b-card>
-  </div>
+    <div class="mt-4 mb-6">
+      <button @click="modal = true">
+<!--        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>-->
+        <span class="text-lg">Create New Project</span>
+      </button>
+      <CreateNewProject v-model="modal" title="Create Project" @save="save">
+          <input v-model="projectName" type="text" placeholder="America" >
+      </CreateNewProject>
+    </div>
 </template>
 
 <script>
 
 import {SET_BREADCRUMB} from "@/store/breadcrumbs.store";
-
+import CreateNewProject from "./components/modals/CreateNewProject.vue";
 export default {
+  components: {CreateNewProject},
+  data() {
+    return {
+      projectName: "",
+      modal: false
+    }
+  },
+  methods:{
+    async save() {
+      if (!this.projectName.trim()) {
+        alert("Please enter a project name");
+        return;
+      }
+
+      try {
+        // This uses your Vuex store exactly like register/login
+        await this.$store.dispatch('project/createProject', this.projectName.trim());
+
+        // Success → close modal
+        this.modal = false;
+        this.projectName = "";
+
+        alert("Project created! Check your database now");
+        await this.$store.dispatch('project/fetchProjects');
+        // Later: this.$toast.success(...) or reload projects list
+
+      } catch (error) {
+        alert(error.message || "Something went wrong");
+      }
+    },
+  },
   mounted() {
     this.$store.dispatch(SET_BREADCRUMB, [
-      {text: this.$t('Home'), active: true}
+      {text: this.$t('My Projects'), active: true},
     ]);
   },
 }

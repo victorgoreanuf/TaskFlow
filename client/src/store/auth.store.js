@@ -40,7 +40,19 @@ export default {
 		}, async login({commit, dispatch}, form) {
 			await Vue.prototype.$http.post('/api/login', form);
 			return dispatch('user');
-		}, async user({commit}) {
+		}, async register({commit, dispatch}, form) {
+            // 1. Send the POST request to the registration endpoint.
+            // Your backend (Laravel) will handle validation and user creation.
+            await Vue.prototype.$http.post('/api/register', form);
+
+            // 2. 🚨 CRITICAL FIX: Dispatch the 'user' action to load the user's data
+            //    and update the Vuex state BEFORE the redirect happens in the component.
+            return dispatch('user');
+
+            // Note: If you want to force them to the login page (unauthenticated),
+            // you MUST remove the auto-login on the Laravel side (as discussed previously).
+            // But since they ARE logged in by the backend, this is the correct frontend step.
+        }, async user({commit}) {
 			return await Vue.prototype.$http.get('/api/me').then(({data}) => {
 				const user = Object.assign({}, data.data);
 				delete user.permissions;
@@ -52,7 +64,24 @@ export default {
 			}).finally(() => {
 				commit('SET_CHECKED', true)
 			});
-		}, logout({commit}) {
+		}, async createProject({ dispatch }, projectName) {
+            try {
+                // Send the name to your Laravel API
+                const response = await Vue.prototype.$http.post('/api/project', {
+                    name: projectName
+                });
+
+                // Optional: refresh the user/projects if you store them elsewhere
+                // await dispatch('user'); // only if you need fresh user data
+
+                return response.data; // return the created project (useful for UI)
+            } catch (error) {
+                // Throw so component can catch and show error
+                const message = error.response?.data?.message || 'Failed to create project';
+                throw new Error(message);
+            }
+        },
+        logout({commit}) {
 			return Vue.prototype.$http.post('/api/logout').finally(() => {
 				commit('SET_USER', null);
 				commit('SET_PERMISSIONS', [])

@@ -5,6 +5,9 @@ use App\Http\Controllers\Dashboard\ProfileController;
 use App\Http\Controllers\Dashboard\UploadController;
 use App\Http\Controllers\Dashboard\UserController;
 use App\Http\Controllers\Dashboard\RoleController;
+use App\Http\Controllers\ProjectController;
+use Laravel\Fortify\Http\Controllers\RegisteredUserController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -17,10 +20,21 @@ use App\Http\Controllers\Dashboard\RoleController;
 |
 */
 
+Route::post('/register', [RegisteredUserController::class, 'store'])
+    ->name('register');
+
 Route::middleware('auth:sanctum')->group(function () {
 	Route::post('/files', [UploadController::class, 'store']);
 
 	Route::get('/me', [ProfileController::class, 'me']);
+
+    Route::prefix('project')->as('project.')->controller(ProjectController::class)->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::post('/', 'store')->name('store');
+//        Route::get('/{project}', 'show')->name('show');
+//        Route::put('/{project}', 'update')->name('update');
+//        Route::delete('/{project}', 'destroy')->name('destroy');
+    });
 
 	Route::prefix('users')->as('users.')->controller(UserController::class)->group(function () {
 		Route::get('/', 'index')->name('index');

@@ -14,6 +14,8 @@ use Illuminate\Support\ServiceProvider;
 use Laravel\Fortify\Contracts\PasswordUpdateResponse;
 use Laravel\Fortify\Contracts\ProfileInformationUpdatedResponse;
 use Laravel\Fortify\Fortify;
+use App\Actions\Fortify\CreateNewUser;
+use Laravel\Fortify\Contracts\CreatesNewUsers;
 
 class FortifyServiceProvider extends ServiceProvider
 {
@@ -22,6 +24,13 @@ class FortifyServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
+        // The missing registration binding:
+        $this->app->singleton(
+            CreatesNewUsers::class,
+            CreateNewUser::class
+        );
+
+        // Existing bindings you already have:
         $this->app->bind(ProfileInformationUpdatedResponse::class, \App\Actions\Fortify\ProfileInformationUpdatedResponse::class);
         $this->app->bind(PasswordUpdateResponse::class, \App\Actions\Fortify\PasswordUpdateResponse::class);
     }

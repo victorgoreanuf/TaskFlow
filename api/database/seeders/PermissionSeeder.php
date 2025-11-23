@@ -46,7 +46,7 @@ class PermissionSeeder extends Seeder
 		$role->givePermissionTo(Permission::all());
 
 		if (app()->environment() != 'testing') {
-			$user = User::firstOrCreate(['id' => 1], ['email' => 'info@info.com', 'name' => 'Super Admin', 'username' => 'admin', 'mobile' => '+970567940999', 'image' => "https://api.multiavatar.com/yassir.png", 'password' => bcrypt(123123)]);
+			$user = User::firstOrCreate(['id' => 1], ['email' => 'info@info.com', 'name' => 'Super Admin', 'username' => 'admin', 'mobile' => '+970567940999', 'image' => "https://api.dicebear.com/9.x/pixel-art/svg", 'password' => bcrypt(123123)]);
 			$user->assignRole($role);
 		}
 	}

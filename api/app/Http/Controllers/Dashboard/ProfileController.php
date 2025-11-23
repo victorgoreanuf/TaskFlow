@@ -10,6 +10,7 @@ class ProfileController extends Controller
 {
     public function me()
     {
+//        dd(Auth::user());
         return new UserProfileResource(Auth::user());
     }
 }
