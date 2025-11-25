@@ -26,6 +26,7 @@ class TaskController extends Controller
         // 2. Validation
         $request->validate([
             'name' => 'required|string|max:255',
+            'due_date' => 'nullable|date',
             'column_id' => [
                 'required',
                 'integer',
@@ -44,6 +45,7 @@ class TaskController extends Controller
             'column_id' => $request->column_id,
             'name' => $request->name,
             'description' => $request->description,
+            'due_date' => $request->due_date,
             'order' => $maxOrder + 1,
             // default priority is 1 (low)
         ]);

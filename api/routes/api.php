@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\BoardColumnController;
+use App\Http\Controllers\TaskController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Dashboard\ProfileController;
 use App\Http\Controllers\Dashboard\UploadController;
@@ -34,6 +36,28 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/{project}', 'show')->name('show');
 //        Route::put('/{project}', 'update')->name('update');
 //        Route::delete('/{project}', 'destroy')->name('destroy');
+
+        // ============================================
+        // COLUMN ROUTES
+        // ============================================
+        // Notice how we use {boardColumn} to match the model binding
+        Route::controller(BoardColumnController::class)->group(function() {
+
+            // POST /api/project/{project}/columns
+            Route::post('/{project}/columns', 'store')->name('columns.store');
+
+            // PUT /api/project/{project}/columns/{boardColumn}
+            Route::put('/{project}/columns/{boardColumn}', 'update')->name('columns.update');
+
+            // DELETE /api/project/{project}/columns/{boardColumn}
+            Route::delete('/{project}/columns/{boardColumn}', 'destroy')->name('columns.destroy');
+        });
+
+        Route::prefix('{project}/tasks')->as('tasks.')->controller(TaskController::class)->group(function () {
+            Route::post('/', 'store')->name('store');
+            Route::put('/{task}', 'update')->name('update');
+            Route::delete('/{task}', 'destroy')->name('destroy');
+        });
     });
 
 	Route::prefix('users')->as('users.')->controller(UserController::class)->group(function () {

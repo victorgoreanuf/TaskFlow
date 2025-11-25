@@ -11,21 +11,15 @@ const state = {
 const mutations = {
     // Mutation to set the full list of projects
     SET_PROJECTS(state, projects) {
-        // projects is expected to be { data: [...] } from the API
         state.list = projects.data;
     },
     // Mutation to add a new project to the list (used after creation)
     ADD_PROJECT(state, newProject) {
-        state.list.unshift(newProject); // Add to the start of the list
+        state.list.unshift(newProject);
     },
-    /**
-     * Mutation to set the project the user is currently looking at.
-     * This now accepts the full project object returned by the API (which includes columns/tasks).
-     */
     SET_CURRENT_PROJECT(state, projectObject) {
         state.currentProject = projectObject;
     },
-    // Clear state on logout
     SET_LOGOUT(state){
         state.list = [];
         state.currentProject = null;
@@ -33,42 +27,76 @@ const mutations = {
 };
 
 const actions = {
+    // 1. CREATE COLUMN
+    async createColumn({ commit }, { projectSlug, title }) {
+        try {
+            const response = await Vue.prototype.$http.post(`/api/project/${projectSlug}/columns`, {
+                title: title
+            });
+            return response.data;
+        } catch (error) {
+            console.error("Vuex: Failed to create column", error);
+            throw error;
+        }
+    },
+
+    // 2. UPDATE COLUMN
+    async updateColumn({ commit }, { projectSlug, columnId, title }) {
+        try {
+            const response = await Vue.prototype.$http.put(`/api/project/${projectSlug}/columns/${columnId}`, {
+                title: title
+            });
+            return response.data;
+        } catch (error) {
+            console.error("Vuex: Failed to update column", error);
+            throw error;
+        }
+    },
+
+    // 3. DELETE COLUMN
+    async deleteColumn({ commit }, { projectSlug, columnId }) {
+        try {
+            await Vue.prototype.$http.delete(`/api/project/${projectSlug}/columns/${columnId}`);
+        } catch (error) {
+            console.error("Vuex: Failed to delete column", error);
+            throw error;
+        }
+    },
+
+    // 4. CREATE TASK (Updated with due_date)
+    async createTask({ commit }, payload) {
+        // Extract due_date here
+        const { projectSlug, columnId, name, description, due_date } = payload;
+
+        // Call the endpoint: /api/project/{slug}/tasks
+        const response = await Vue.prototype.$http.post(`/api/project/${projectSlug}/tasks`, {
+            column_id: columnId,
+            name: name,
+            description: description,
+            due_date: due_date // <--- Pass this to the Laravel Backend
+        });
+
+        return response.data;
+    },
+
     /**
-     * Action to fetch the full project details (including columns and tasks) from the API.
-     * @param {string} slug - The project's unique slug from the URL.
+     * Action to fetch the full project details
      */
     async fetchProjectBySlug({ commit }, slug) {
         if (!slug) return;
 
         try {
-            // API call: GET /api/project/{slug}
             const response = await Vue.prototype.$http.get(`/api/project/${slug}`);
-
-            // Console log the data structure (as requested)
             console.log('API Response (Full Board Data):', response.data.data);
-
-            // Commit the full project object to the currentProject state
             commit('SET_CURRENT_PROJECT', response.data.data);
-
             return response.data.data;
-
         } catch (error) {
             console.error(`Error fetching project board for slug ${slug}:`, error.response || error);
-            // On error, clear current project state
             commit('SET_CURRENT_PROJECT', null);
             throw error;
         }
     },
 
-    // Renamed local search action (now deprecated in favor of API fetch for board view)
-    findProjectInLocalList({ state, commit }, slug) {
-        const project = state.list.find(x => x.slug === slug);
-        return project;
-    },
-
-    /**
-     * Action to fetch all projects belonging to the current user.
-     */
     async fetchProjects({ commit }) {
         try {
             const response = await Vue.prototype.$http.get('/api/project');
@@ -79,9 +107,6 @@ const actions = {
         }
     },
 
-    /**
-     * Action to create a new project.
-     */
     async createProject({ commit }, projectName) {
         try {
             const response = await Vue.prototype.$http.post('/api/project', {
