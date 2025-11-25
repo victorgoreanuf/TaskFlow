@@ -31,7 +31,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::prefix('project')->as('project.')->controller(ProjectController::class)->group(function () {
         Route::get('/', 'index')->name('index');
         Route::post('/', 'store')->name('store');
-//        Route::get('/{project}', 'show')->name('show');
+        Route::get('/{project}', 'show')->name('show');
 //        Route::put('/{project}', 'update')->name('update');
 //        Route::delete('/{project}', 'destroy')->name('destroy');
     });

@@ -1,0 +1,37 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('board_columns', function (Blueprint $table) {
+            $table->id();
+
+            // Link to the Project (assuming your projects table is 'projects')
+            $table->foreignId('project_id')->constrained()->cascadeOnDelete();
+
+            $table->string('title');
+            $table->unsignedSmallInteger('order');
+
+            // Unique constraint: Ensures the order is unique within a single project
+            $table->unique(['project_id', 'order']);
+
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('board_columns');
+    }
+};

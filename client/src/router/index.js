@@ -6,6 +6,7 @@ import ensureCsrfTokenSet from './middlewares/ensureCsrfTokenSet'
 import authenticated from './middlewares/authenticated';
 import AuthRoutes from "@/router/routes/AuthRoutes";
 import ModulesRoutes from "@/router/routes/ModulesRoutes";
+import KenbanBoard from "@/views/components/project/KenbanBoard.vue";
 
 Vue.use(VueRouter)
 
@@ -51,6 +52,15 @@ const router = new VueRouter({
 				layout: 'full',
 			},
 		},
+        {
+            path: '/project/:id', // 👈 The dynamic segment (:id) captures the project ID
+            name: 'project-board',
+            component: KenbanBoard,
+            props: true, // Allows the project ID to be passed as a prop to the KanbanBoard component
+            meta: {
+                middleware: [authenticated], // Ensure only logged-in users can access
+            }
+        },
 		{
 			path: '*',
 			component: () => import('@/views/error/Error404.vue'),

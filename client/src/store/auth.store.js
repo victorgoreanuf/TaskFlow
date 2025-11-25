@@ -84,7 +84,8 @@ export default {
         logout({commit}) {
 			return Vue.prototype.$http.post('/api/logout').finally(() => {
 				commit('SET_USER', null);
-				commit('SET_PERMISSIONS', [])
+				commit('SET_PERMISSIONS', []);
+                commit('project/SET_LOGOUT', null, { root: true})
 			});
 		}
 	}

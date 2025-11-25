@@ -58,7 +58,6 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function projects()
     {
-        Log::info('projects called ))');
         return $this->hasMany(Project::class);
     }
 }
