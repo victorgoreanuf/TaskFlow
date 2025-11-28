@@ -10,9 +10,9 @@
 
 # TaskFlow (Laravel & Vue SPA)
 
-\<p align="center"\>
-\<img src="README_IMAGES/1.png" alt="TaskFlow Dashboard Overview" width="100%"\>
-\</p\>
+<p align="center"\>
+<img src="README_IMAGES/1.png" alt="TaskFlow Dashboard Overview" width="100%"\>
+</p\>
 
 [](https://vuejs.org/)
 [](https://laravel.com)
@@ -30,9 +30,9 @@ Unlike traditional scrolling boards, TaskFlow implements a Figma-like infinite w
 - **Zoom Controls:** Mouse wheel support and HUD controls for zooming in/out.
 - **Fit-to-Screen:** One-click reset to center the view.
 
-\<p align="center"\>
-\<img src="README_IMAGES.gif" alt="Infinite Canvas Demo" width="600"\>
-\</p\>
+<p align="center"\>
+<img src="README_IMAGES.gif" alt="Infinite Canvas Demo" width="600"\>
+</p\>
 
 ### Advanced Task Management
 
