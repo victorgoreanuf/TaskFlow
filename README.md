@@ -8,35 +8,6 @@
 ![Test PHP](https://github.com/fumeapp/laranuxt/workflows/Test%20PHP/badge.svg)
 [![Lint PHP](https://github.com/fumeapp/laranuxt/actions/workflows/lint-php.yml/badge.svg)](https://github.com/fumeapp/laranuxt/actions/workflows/lint-php.yml)
 
-## Technology
-- PHP-FPM 8.1
-- Laravel 10
-- Vue, Vuex, i18n
-- Sanctum for Authentication (session)
-- Fortify
-- Docker & Docker Compose
-- Nginx
-- Mysql
-- Redis
-- Mailpit (as a test mail driver)
-- Redis Queues
-- Task Scheduling
-
-## How it works
-### Containers
-1) **api**: serves the backend app (laravel app)
-2) **client**: serves the fronted app (vue app)
-3) **webserver**: services static content, storage, and passes traffic to api & client containers (proxy)
-4) **mysql**: main database connection
-5) **redis**: cache driver / queue connection
-6) **mailpit**: SMTP server with a web interface to view all mails (just for dev env)
-7) **worker**: runs queue workers & crontab
-
-
-Here is the updated `README.md` text with the app name **TaskFlow**. I have removed all emojis and formatted it strictly in Markdown so you can copy and paste it directly.
-
------
-
 # TaskFlow (Laravel & Vue SPA)
 
 [](https://vuejs.org/)
