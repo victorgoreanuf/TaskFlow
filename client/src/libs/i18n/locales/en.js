@@ -16,6 +16,7 @@ export default {
 			"action": "Action"
 		}
 	},
+    "My Projects": "My Projects",
 	"UI Elements": "UI Elements",
 	"Forms & Tables": "Forms & Tables",
 	"Pages": "Pages",

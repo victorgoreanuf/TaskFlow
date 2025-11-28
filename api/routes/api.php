@@ -56,6 +56,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::prefix('{project}/tasks')->as('tasks.')->controller(TaskController::class)->group(function () {
             Route::post('/', 'store')->name('store');
             Route::put('/{task}', 'update')->name('update');
+            Route::patch('/{task}/move', 'move')->name('move'); // For Drag & Drop
             Route::delete('/{task}', 'destroy')->name('destroy');
         });
     });

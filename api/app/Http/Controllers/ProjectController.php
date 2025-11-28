@@ -59,14 +59,20 @@ class ProjectController extends Controller
     }
 
     protected function initializeDefaultColumns(Project $project): void {
+        Log::info("Project in initialize", [
+            'project' => $project,
+        ]);
         $defaultColumns = ['To Do', 'In Progress', 'Review', 'Done'];
+        $defaultColors = ['theme-pink', 'theme-green', 'theme-blue', 'theme-red'];
         $order = 1;
 
         foreach ($defaultColumns as $title) {
             $project->columns()->create([
                 'title' => $title,
-                'order' => $order++,
+                'order' => $order,
+                'color' => $defaultColors[$order - 1],
             ]);
+            $order = $order + 1;
         }
     }
 }

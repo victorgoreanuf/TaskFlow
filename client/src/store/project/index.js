@@ -1,19 +1,15 @@
-// store/modules/projects.js
-
 import Vue from 'vue';
 
-// Initial state for the projects module
+// Initial state
 const state = {
-    list: [], // Array to hold all the user's projects (summary data)
-    currentProject: null // Object to hold details of the project currently being viewed (full board data)
+    list: [],
+    currentProject: null
 };
 
 const mutations = {
-    // Mutation to set the full list of projects
     SET_PROJECTS(state, projects) {
         state.list = projects.data;
     },
-    // Mutation to add a new project to the list (used after creation)
     ADD_PROJECT(state, newProject) {
         state.list.unshift(newProject);
     },
@@ -27,11 +23,44 @@ const mutations = {
 };
 
 const actions = {
-    // 1. CREATE COLUMN
-    async createColumn({ commit }, { projectSlug, title }) {
+    async updateTask({ commit }, payload) {
+        const { projectSlug, taskId, name, description, due_date } = payload;
+
+        const response = await Vue.prototype.$http.put(`/api/project/${projectSlug}/tasks/${taskId}`, {
+            name: name,
+            description: description,
+            due_date: due_date
+        });
+        return response.data;
+    },
+    async moveTask({ commit }, { projectSlug, taskId, columnId, order }) {
+        try {
+            // Using the specific move endpoint
+            await Vue.prototype.$http.patch(`/api/project/${projectSlug}/tasks/${taskId}/move`, {
+                column_id: columnId,
+                order: order
+            });
+
+            // We do NOT refetch the board here to keep the drag smooth.
+            // The local state is already updated by vuedraggable.
+        } catch (error) {
+            console.error("Vuex: Failed to move task", error);
+            // Recommended: If API fails, reload board to revert the drag UI
+            // dispatch('fetchProjectBySlug', projectSlug);
+            throw error;
+        }
+    },
+    // 6. DELETE TASK (Optional but recommended)
+    // DELETE /api/project/{slug}/tasks/{taskId}
+    async deleteTask({ commit }, { projectSlug, taskId }) {
+        await Vue.prototype.$http.delete(`/api/project/${projectSlug}/tasks/${taskId}`);
+    },
+    // 1. CREATE COLUMN (Sends Title + Color)
+    async createColumn({ commit }, { projectSlug, title, color }) {
         try {
             const response = await Vue.prototype.$http.post(`/api/project/${projectSlug}/columns`, {
-                title: title
+                title: title,
+                color: color // <--- Sending color to backend
             });
             return response.data;
         } catch (error) {
@@ -40,11 +69,12 @@ const actions = {
         }
     },
 
-    // 2. UPDATE COLUMN
-    async updateColumn({ commit }, { projectSlug, columnId, title }) {
+    // 2. UPDATE COLUMN (Sends Title + Color)
+    async updateColumn({ commit }, { projectSlug, columnId, title, color }) {
         try {
             const response = await Vue.prototype.$http.put(`/api/project/${projectSlug}/columns/${columnId}`, {
-                title: title
+                title: title,
+                color: color // <--- Sending color to backend
             });
             return response.data;
         } catch (error) {
@@ -63,31 +93,25 @@ const actions = {
         }
     },
 
-    // 4. CREATE TASK (Updated with due_date)
+    // 4. CREATE TASK (Sends Date + Description)
     async createTask({ commit }, payload) {
-        // Extract due_date here
         const { projectSlug, columnId, name, description, due_date } = payload;
 
-        // Call the endpoint: /api/project/{slug}/tasks
         const response = await Vue.prototype.$http.post(`/api/project/${projectSlug}/tasks`, {
             column_id: columnId,
             name: name,
             description: description,
-            due_date: due_date // <--- Pass this to the Laravel Backend
+            due_date: due_date // <--- Sending date to backend
         });
 
         return response.data;
     },
 
-    /**
-     * Action to fetch the full project details
-     */
+    // 5. FETCH PROJECT
     async fetchProjectBySlug({ commit }, slug) {
         if (!slug) return;
-
         try {
             const response = await Vue.prototype.$http.get(`/api/project/${slug}`);
-            console.log('API Response (Full Board Data):', response.data.data);
             commit('SET_CURRENT_PROJECT', response.data.data);
             return response.data.data;
         } catch (error) {
@@ -114,7 +138,6 @@ const actions = {
             });
             commit('ADD_PROJECT', response.data.data);
             return response.data.data;
-
         } catch (error) {
             console.error('Error creating project:', error);
             throw error;
@@ -124,10 +147,8 @@ const actions = {
 
 const getters = {
     projectsList: state => state.list,
-    projectCount: state => state.list.length,
     currentProject: state => state.currentProject,
 };
-
 
 export default {
     namespaced: true,

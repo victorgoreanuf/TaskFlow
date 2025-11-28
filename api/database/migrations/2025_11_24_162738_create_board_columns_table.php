@@ -20,9 +20,6 @@ return new class extends Migration
             $table->string('title');
             $table->unsignedSmallInteger('order');
 
-            // Unique constraint: Ensures the order is unique within a single project
-            $table->unique(['project_id', 'order']);
-
             $table->timestamps();
         });
     }

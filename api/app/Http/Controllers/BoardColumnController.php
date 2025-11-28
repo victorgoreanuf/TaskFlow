@@ -20,6 +20,7 @@ class BoardColumnController extends Controller
 
         $request->validate([
             'title' => 'required|string|max:100',
+            'color' => 'required|string', // Validate color
         ]);
 
         $maxOrder = $project->columns()->max('order') ?? 0;
@@ -27,6 +28,7 @@ class BoardColumnController extends Controller
         $column = $project->columns()->create([
             'title' => $request->title,
             'order' => $maxOrder + 1,
+            'color' => $request->color, // Save color
         ]);
 
         return response()->json([
@@ -57,7 +59,7 @@ class BoardColumnController extends Controller
             // ... existing validation ...
         ]);
 
-        $boardColumn->update($request->only('title', 'order'));
+        $boardColumn->update($request->only('title', 'order', 'color'));
 
         return response()->json([
             'data' => $boardColumn,

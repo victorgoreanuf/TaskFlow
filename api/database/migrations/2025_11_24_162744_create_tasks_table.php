@@ -26,9 +26,6 @@ return new class extends Migration
             $table->dateTime('due_date')->nullable();
             $table->unsignedTinyInteger('priority')->default(1); // e.g., 1=Low, 3=High
 
-            // Unique constraint: Ensures task order is unique within its column
-            $table->unique(['column_id', 'order']);
-
             $table->timestamps();
         });
     }

@@ -11,11 +11,7 @@ class BoardColumn extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'project_id',
-        'title',
-        'order',
-    ];
+    protected $fillable = ['project_id', 'title', 'order', 'color']; // Add 'color'
 
     /**
      * A column belongs to a Project.
