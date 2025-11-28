@@ -30,9 +30,7 @@ Unlike traditional scrolling boards, TaskFlow implements a Figma-like infinite w
 - **Zoom Controls:** Mouse wheel support and HUD controls for zooming in/out.
 - **Fit-to-Screen:** One-click reset to center the view.
 
-<p align="center"\>
 ![](https://github.com/victorgoreanuf/TaskFlow/blob/main/README_IMAGES/2.gif)
-</p\>
 
 ### Advanced Task Management
 
