@@ -10,6 +10,10 @@
 
 # TaskFlow (Laravel & Vue SPA)
 
+\<p align="center"\>
+\<img src="README_IMAGES/1.png" alt="TaskFlow Dashboard Overview" width="100%"\>
+\</p\>
+
 [](https://vuejs.org/)
 [](https://laravel.com)
 [](https://github.com/fumeapp/laranuxt/actions/workflows/lint-php.yml)
@@ -26,12 +30,20 @@ Unlike traditional scrolling boards, TaskFlow implements a Figma-like infinite w
 - **Zoom Controls:** Mouse wheel support and HUD controls for zooming in/out.
 - **Fit-to-Screen:** One-click reset to center the view.
 
+\<p align="center"\>
+\<img src="README_IMAGES.gif" alt="Infinite Canvas Demo" width="600"\>
+\</p\>
+
 ### Advanced Task Management
 
 - **Drag & Drop:** Powered by Vue.Draggable (Sortable.js), allowing smooth movement of tasks between columns.
-- **Task Details:** Create and edit tasks with Titles, Descriptions (Bios), and Due Dates.
 - **Smart Validation:** Due dates are automatically highlighted in red if the task is overdue.
 - **Contextual Editing:** Click any card to open a modal for editing or deletion.
+
+### Task Details & Editing
+
+- **Task Details:** Create and edit tasks with Titles, Descriptions (Bios), and Due Dates.
+- **Edit Modes:** Seamlessly switch between viewing and editing details within the modal.
 
 ### Dynamic Columns & Theming
 
