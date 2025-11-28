@@ -31,7 +31,7 @@ Unlike traditional scrolling boards, TaskFlow implements a Figma-like infinite w
 - **Fit-to-Screen:** One-click reset to center the view.
 
 <p align="center"\>
-<img src="README_IMAGES.gif" alt="Infinite Canvas Demo" width="600"\>
+![](https://github.com/victorgoreanuf/TaskFlow/blob/main/README_IMAGES/2.gif)
 </p\>
 
 ### Advanced Task Management
