@@ -85,15 +85,29 @@
       </div>
     </div>
 
+
     <div class="canvas-controls">
       <div class="project-title mb-2">
         <h5 class="font-weight-bold m-0">{{ displayProject ? displayProject.name : 'Loading...' }}</h5>
       </div>
-      <div class="btn-group shadow-sm bg-white rounded-pill">
-        <button class="btn btn-icon" @click="zoomOut">-</button>
-        <span class="zoom-level">{{ Math.round(scale * 100) }}%</span>
-        <button class="btn btn-icon" @click="zoomIn">+</button>
-        <button class="btn btn-icon border-left" @click="resetView">Fit</button>
+
+      <div class="d-flex align-items-center justify-content-end">
+        <div class="btn-group shadow-sm bg-white rounded-pill mr-3">
+          <button class="btn btn-icon" @click="zoomOut" title="Zoom Out">-</button>
+          <span class="zoom-level">{{ Math.round(scale * 100) }}%</span>
+          <button class="btn btn-icon" @click="zoomIn" title="Zoom In">+</button>
+          <button class="btn btn-icon border-left" @click="resetView" title="Reset View">Fit</button>
+        </div>
+
+        <button
+            class="export-btn shadow-sm"
+            @click="exportBoardData"
+            title="Export Board JSON"
+        >
+          <svg width="20" height="20" fill="none" stroke="#4b5563" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+          </svg>
+        </button>
       </div>
     </div>
 
@@ -243,6 +257,39 @@ export default {
     id: { immediate: true, handler(newSlug) { this.initializeBoard(newSlug); } }
   },
   methods: {
+
+    exportBoardData() {
+      if (!this.displayProject) return;
+
+      // 1. Prepare the data
+      // We create a clean object with date stamp
+      const exportData = {
+        exported_at: new Date().toISOString(),
+        project: this.displayProject
+      };
+
+      // 2. Convert to JSON string
+      const jsonString = JSON.stringify(exportData, null, 2);
+
+      // 3. Create a Blob (Binary Large Object)
+      const blob = new Blob([jsonString], { type: 'application/json' });
+
+      // 4. Create a temporary download link
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+
+      // 5. Set filename (e.g., "My Project-2023-11-28.json")
+      const safeName = this.displayProject.name.replace(/[^a-z0-9]/gi, '_').toLowerCase();
+      link.href = url;
+      link.download = `${safeName}-${new Date().toISOString().slice(0, 10)}.json`;
+
+      // 6. Trigger download and cleanup
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    },
+
     async initializeBoard(slug) {
       if (!slug) return;
       this.loading = true;
@@ -504,5 +551,28 @@ input[type="date"].clean-input { line-height: 1.5; }
 /* Optional: If you want to disable it on the whole board while dragging */
 .infinite-canvas:active {
   user-select: none;
+}
+
+.export-btn {
+  width: 40px;
+  height: 40px;
+  background-color: white;
+  border-radius: 50%; /* Perfect Circle */
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.export-btn:hover {
+  background-color: #f3f4f6;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1) !important;
+}
+
+.export-btn:active {
+  transform: translateY(0);
 }
 </style>
